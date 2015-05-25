@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script type="text/javascript" src="jquery-1.11.3.js"></script>
+<script type="text/javascript" src="jquery.autoCallback.js"></script>
+<script type="text/javascript">
+(function($) {
+    $.autoCallback.demo = {
+        domready: false,
+        require: function(obj, elem) {
+            return $(elem).is("li");
+        },
+        callback: function(obj, elem) {
+            callback_fun(obj, elem);
+        }
+    };
+    var callback_fun = function(obj, elem) {
+        console.log(obj, elem);
+        $("a", elem).on("click", function() {
+            console.log($(this).text());
+            return false;
+        });
+        $("span", elem).on("click", function() {
+            $(this).parent("li").css({"background":"#ff0"}).fadeOut("500", function() {
+                  $(this).remove();
+            });
+            return false;
+        });
+    };
+    $(function(){
+        $("#append").on("click", function() {
+            $("#container").append('<li><a href="#">append - Console.log this text!</a> <span>Delete this</span></li>');
+            return false;
+        });
+        $("#prepend").on("click", function() {
+            $("#container").prepend('<li><a href="#">prepend - Console.log this text!</a> <span>Delete this</span></li>');
+            return false;
+        });
+        $("#replace").on("click", function() {
+            $("#container>li").eq(0).replaceWith('<li><a href="#">replaceWith - Console.log this text!</a> <span>Delete this</span></li>');
+            return false;
+        });
+        $("#before").on("click", function() {
+            $("#container>li").eq(0).before('<li><a href="#">before - Console.log this text!</a> <span>Delete this</span></li>');
+            return false;
+        });
+    });
+})(jQuery);
+</script>
+<title>mlinquan/jQuery-autoCallback-Plugin</title>
+</head>
+
+
+<body>
+<a href="#" id="append">Append to List</a><br>
+<a href="#" id="prepend">Prepend to List</a><br>
+<a href="#" id="replace">Replace first li</a><br>
+<a href="#" id="before">Insert a list item before fire li</a><br>
+<ul id="container"></ul>
+</body>
+</html>
+
