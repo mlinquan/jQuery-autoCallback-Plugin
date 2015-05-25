@@ -16,6 +16,7 @@
     $.each(['append', 'prepend', 'before', 'after', 'replaceWith', 'appendTo', 'prependTo', 'insertBefore', 'insertAfter', 'replaceAll'], function(i, name) {
         $.domEvents[name] = $.fn[name];
         $.fn[name] = function() {
+            $.domEvents[name].apply(this, arguments);
             this.domManip(arguments, function( elem ) {
                 var that = this;
                 if(i > 4) {
@@ -24,7 +25,7 @@
                     $(that).autoCallback(elem);
                 }
             });
-            return $.domEvents[name].apply(this, arguments);
+            return this;
         };
     });
     $.autoCallback = {
