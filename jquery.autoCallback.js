@@ -3,7 +3,7 @@
  * https://github.com/mlinquan/jQuery-autoCallback-Plugin
  *
  * @version
- * 0.0.1 (May 25, 2015)
+ * 0.0.2 (May 25, 2015)
  *
  * @copyright
  * Copyright (C) 2015 LinQuan.
@@ -13,7 +13,7 @@
  */
  (function($) {
     $.domEvents = {};
-    $.each(['append', 'prepend', 'before', 'after', 'replaceWith', 'appendTo', 'prependTo', 'insertBefore', 'insertAfter', 'replaceAll'], function(i, name) {
+    $.each(['append', 'prepend', 'before', 'after', 'replaceWith'], function(i, name) {
         $.domEvents[name] = $.fn[name];
         $.fn[name] = function() {
             var back_elem;
@@ -22,30 +22,35 @@
                 if(!elem.jquery) {
                     elem = $(elem);
                 }
-                if(i > 4) {
-                    $(elem).autoCallback(this);
-                } else {
-                    $(this).autoCallback(elem);
-                }
                 back_elem = elem;
             });
-            return $.domEvents[name].apply(this, back_elem);
+            $.domEvents[name].apply(this, back_elem)
+            return this.autoCallback(back_elem);
         };
     });
+    $.pendingCallback = {
+    };
     $.autoCallback = {
+        add: function(name, opitons) {
+            if(!$.pendingCallback[name]) {
+                $.pendingCallback[name] = opitons;
+            }
+            $.autoCallback.once(name);
+        },
+        once: function(name) {
+            var pending = $.pendingCallback[name];
+            var obj = $(document);
+            if(pending.domready && !pending.runed) {
+                $.pendingCallback[name].runed = true;
+                pending.callback(obj);
+            }
+        }
     };
     $.fn.autoCallback = function(elem) {
         var that = $(this);
         elem = $(elem);
-        $.each($.autoCallback, function() {
+        $.each($.pendingCallback, function() {
             this.require(that, elem) && this.callback(that, elem);
         });
     };
-    $(function() {
-        $.each($.autoCallback, function(i, name) {
-            var that = $(this),
-            obj = $(document);
-            that.domready && that.callback(obj, that);
-        });
-    })
 })(jQuery);

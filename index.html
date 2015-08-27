@@ -7,27 +7,24 @@
 <script type="text/javascript" src="jquery.autoCallback.js"></script>
 <script type="text/javascript">
 (function($) {
-    $.autoCallback.demo = {
+    $.autoCallback.add('demo', {
         domready: false,
         require: function(obj, elem) {
             return $(elem).is("li");
         },
         callback: function(obj, elem) {
-            callback_fun(obj, elem);
-        }
-    };
-    var callback_fun = function(obj, elem) {
-        $("a", elem).on("click", function() {
-            console.log($(this).text());
-            return false;
-        });
-        $("span", elem).on("click", function() {
-            $(this).parent("li").css({"background":"#ff0"}).fadeOut("500", function() {
-                  $(this).remove();
+            $("a", elem).on("click", function() {
+                console.log($(this).text());
+                return false;
             });
-            return false;
-        });
-    };
+            $("span", elem).on("click", function() {
+                $(this).parent("li").css({"background":"#ff0"}).fadeOut("500", function() {
+                      $(this).remove();
+                });
+                return false;
+            });
+        }
+    });
     $(function(){
         $("#append").on("click", function() {
             $("#container").append('<li><a href="#">append - Console.log this text!</a> <span>Delete this</span></li>');
